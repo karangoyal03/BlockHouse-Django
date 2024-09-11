@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  django-backend:
+    image: karangoyal03/chart-app
+    build:
+      context: ./chartapi
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./chartapi:/app
+    depends_on:
+      - nextjs-frontend
+    environment:
+      - DEBUG=1
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+  nextjs-frontend:
+    image: karangoyal03/blockhouse
+    build:
+      context: ./blockhouse
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./blockhouse:/app
+    environment:
+      - NODE_ENV=development
+    command: ["npm", "run", "dev"]
